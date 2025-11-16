@@ -433,6 +433,19 @@
         font-size: 0.95rem;
       }
 
+      .file-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+
+      .file-reminder {
+        margin-top: 8px;
+        font-size: 0.9rem;
+        color: #5f6c80;
+      }
+
       .site-footer {
         margin-top: 20px;
         padding: 10px 16px;
@@ -606,9 +619,18 @@
           4. Le lendemain, utilisez <strong>Charger votre planning</strong> pour sélectionner le fichier JSON
           stocké dans le dossier.
         </p>
-        <a class="btn btn-secondary" href="structure_frigo_est.zip" download>
-          Télécharger le dossier FrigoEst (ZIP)
-        </a>
+        <div class="file-actions">
+          <a class="btn btn-secondary" href="structure_frigo_est.zip" download>
+            Télécharger le dossier FrigoEst (ZIP)
+          </a>
+          <button class="btn btn-primary" type="button" id="open-file-manager">
+            Ouvrir les fichiers téléchargés
+          </button>
+        </div>
+        <p class="file-reminder">
+          Conseil : après chaque export, ouvrez vos téléchargements et déplacez
+          manuellement le fichier dans le dossier <em>FrigoEst</em> approprié.
+        </p>
       </section>
 
       <section class="meta-card">
@@ -1993,6 +2015,12 @@
               ticket.image
           );
           wrapper.hidden = !hasContent;
+          const toggle = document.getElementById("toggle-fuel-preview");
+          if (toggle) {
+            toggle.textContent = hasContent
+              ? "Masquer l'aperçu des tickets"
+              : "Afficher l'aperçu des tickets";
+          }
         }
       }
 
@@ -2161,6 +2189,18 @@
             }
           });
         });
+
+        const fileManagerButton = document.getElementById("open-file-manager");
+        if (fileManagerButton) {
+          fileManagerButton.addEventListener("click", () => {
+            if (importInput) {
+              importInput.click();
+              alert(
+                "Après le téléchargement, déplacez vos fichiers exportés vers le dossier FrigoEst (Plannings ou TicketsCarburant)."
+              );
+            }
+          });
+        }
       }
 
       function attachNavigation() {
