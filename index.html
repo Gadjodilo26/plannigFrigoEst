@@ -236,13 +236,13 @@
       .timesheet th,
       .timesheet td {
         border: 1px solid #222;
-        padding: 6px 4px;
+        padding: 8px 5px;
         text-align: center;
         line-height: 1.2;
       }
 
       .timesheet td {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
       }
 
       .timesheet th {
@@ -253,30 +253,39 @@
         text-align: right;
       }
 
-      .signature-area {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 16px;
+      .post-table-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .notes-field,
+      .signature-box {
+        border: 1px solid #d1d7e0;
+        border-radius: 6px;
+        padding: 4px;
+        background: #fff;
+      }
+
+      .notes-field textarea,
+      .notes-field p {
+        min-height: 40px;
       }
 
       .signature-box {
-        flex: 1;
-        min-width: 220px;
-        border: 1px dashed #94a3b8;
-        border-radius: 8px;
-        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
         text-align: center;
-        min-height: 60px;
+        min-height: 40px;
+        justify-content: space-between;
       }
 
       .signature-box img {
-        max-height: 120px;
+        max-height: 45px;
+        width: 100%;
         object-fit: contain;
-      }
-
-      .notes-field {
-        margin-top: 12px;
       }
 
       .stack-cell {
@@ -448,7 +457,14 @@
           padding: 0;
         }
 
-        body.print-planning .preview-panel,
+        .preview-panel {
+          display: block !important;
+        }
+
+        body.print-fuel .preview-panel {
+          display: none !important;
+        }
+
         body.print-fuel .fuel-panel {
           display: block !important;
         }
@@ -946,12 +962,12 @@
               </tfoot>
             </table>
 
-            <div class="notes-field">
-              <strong>Observations :</strong>
-              <p id="preview-observations">-</p>
-            </div>
+            <div class="post-table-grid">
+              <div class="notes-field">
+                <strong>Observations :</strong>
+                <p id="preview-observations">-</p>
+              </div>
 
-            <div class="signature-area">
               <div class="signature-box">
                 <strong>Signature salarié</strong>
                 <div>
