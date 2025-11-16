@@ -26,6 +26,12 @@
         text-align: center;
       }
 
+      .site-logo {
+        max-height: 70px;
+        margin-bottom: 8px;
+        object-fit: contain;
+      }
+
       header h1 {
         margin-bottom: 0.2rem;
         font-size: 1.6rem;
@@ -372,6 +378,14 @@
         font-size: 0.85rem;
       }
 
+      .fuel-preview-wrapper {
+        margin-top: 12px;
+        border: 1px dashed #d1d7e0;
+        border-radius: 8px;
+        padding: 10px;
+        background: #fdfdfd;
+      }
+
       .empty-ticket {
         border: 1px dashed #bbb;
         border-radius: 6px;
@@ -402,6 +416,21 @@
         display: flex;
         flex-direction: column;
         font-size: 0.95rem;
+      }
+
+      .site-footer {
+        margin-top: 20px;
+        padding: 10px 16px;
+        text-align: center;
+        border-top: 1px solid #d1d7e0;
+        color: #5f6c80;
+        font-size: 0.9rem;
+      }
+
+      .site-footer img {
+        max-height: 40px;
+        margin-left: 12px;
+        vertical-align: middle;
       }
 
       .sr-only {
@@ -501,15 +530,51 @@
   <body>
     <div class="app">
       <header>
+        <img src="logoFE.png" alt="Logo entreprise" class="site-logo" />
         <h1>Suivi hebdomadaire</h1>
         <p>
           Saisissez chaque journée, sauvegardez en local puis prévisualisez la
           feuille finale avant impression.
         </p>
         <p class="week-summary" id="week-summary">
-          Semaine en cours : n° -, du - au -
+          Semaine actuelle : n° -, du - au - — -
         </p>
       </header>
+
+      <section class="meta-card">
+        <h2>Mode d'emploi simplifié</h2>
+        <p>
+          Ce site enregistre vos heures et vos tickets carburant directement sur
+          votre appareil (aucune connexion nécessaire). Voici comment procéder :
+        </p>
+        <ul>
+          <li>
+            <strong>Onglets</strong> (menu horizontal ou ☰ sur mobile) : choisissez
+            un jour, la page carburant ou la prévisualisation.
+          </li>
+          <li>
+            <strong>Remplissage</strong> : saisissez vos horaires, véhicules,
+            clients... Pas besoin de sauvegarder, tout est mémorisé automatiquement.
+          </li>
+          <li>
+            <strong>Exporter / Importer</strong> : sauvegardez vos données dans un
+            fichier ou rechargez une semaine précédente.
+          </li>
+          <li>
+            <strong>Réinitialiser</strong> : efface tout pour recommencer une
+            semaine propre.
+          </li>
+          <li>
+            <strong>Imprimer la semaine</strong> : génère le PDF A4 paysage du
+            planning. <strong>Imprimer les tickets</strong> : produit la feuille
+            carburant.
+          </li>
+          <li>
+            <strong>Aperçu des tickets</strong> : cliquez sur le bouton dédié pour
+            voir/masquer les photos que vous avez importées.
+          </li>
+        </ul>
+      </section>
 
       <section class="meta-card">
         <h2>Informations générales</h2>
@@ -1016,6 +1081,9 @@
               <button class="btn btn-primary" type="button" id="print-fuel">
                 Imprimer les tickets carburant
               </button>
+              <button class="btn btn-secondary" type="button" id="toggle-fuel-preview">
+                Afficher l'aperçu des tickets
+              </button>
             </div>
             <div class="fuel-print-header">
               <img src="logoFE.png" alt="Logo" />
@@ -1407,7 +1475,7 @@
 
             </div>
 
-            <div>
+            <div class="fuel-preview-wrapper" id="fuel-preview-wrapper" hidden>
               <h3>Aperçu des tickets</h3>
               <div class="fuel-preview-grid" id="fuel-preview-grid"></div>
             </div>
@@ -1415,6 +1483,12 @@
         </section>
       </main>
     </div>
+    <footer class="site-footer">
+      <div class="footer-content">
+        <span>Développé par RMS</span>
+        <img src="logoOfficielRMS.svg" alt="Logo RMS" />
+      </div>
+    </footer>
 
     <script>
       // Gestion du stockage local et des calculs d'heures pour chaque jour
@@ -1790,6 +1864,7 @@
       function renderFuelCards() {
         const container = document.getElementById("fuel-preview-grid");
         if (!container) return;
+        const wrapper = document.getElementById("fuel-preview-wrapper");
         container.innerHTML = state.tickets
           .map((ticket, index) => {
             const imageContent = ticket.image
@@ -1809,6 +1884,19 @@
             `;
           })
           .join("");
+        if (wrapper) {
+          const hasContent = state.tickets.some(
+            (ticket) =>
+              ticket.date ||
+              ticket.vehicle ||
+              ticket.kilometrage ||
+              ticket.quantity ||
+              ticket.pricePerL ||
+              ticket.total ||
+              ticket.image
+          );
+          wrapper.hidden = !hasContent;
+        }
       }
 
       function buildPauseCell(start, end) {
@@ -1937,6 +2025,33 @@
         });
       }
 
+      function setupFuelPreviewToggle() {
+        const toggle = document.getElementById("toggle-fuel-preview");
+        const wrapper = document.getElementById("fuel-preview-wrapper");
+        if (!toggle || !wrapper) return;
+        toggle.addEventListener("click", () => {
+          const shouldShow = wrapper.hidden;
+          wrapper.hidden = !shouldShow;
+          toggle.textContent = shouldShow
+            ? "Masquer l'aperçu des tickets"
+            : "Afficher l'aperçu des tickets";
+        });
+        const hasContent = state.tickets.some(
+          (ticket) =>
+            ticket.date ||
+            ticket.vehicle ||
+            ticket.kilometrage ||
+            ticket.quantity ||
+            ticket.pricePerL ||
+            ticket.total ||
+            ticket.image
+        );
+        wrapper.hidden = !hasContent;
+        toggle.textContent = hasContent
+          ? "Masquer l'aperçu des tickets"
+          : "Afficher l'aperçu des tickets";
+      }
+
       function attachNavigation() {
         const buttons = document.querySelectorAll(".tabs button");
         const tabsContainer = document.querySelector(".tabs");
@@ -2049,6 +2164,7 @@
         attachTicketInputs();
         attachNavigation();
         setupNavToggle();
+        setupFuelPreviewToggle();
         const activeBtn = document.querySelector(".tabs button.active");
         if (activeBtn) currentPanel = activeBtn.dataset.target;
 
