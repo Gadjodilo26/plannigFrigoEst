@@ -1359,6 +1359,7 @@
       const STORAGE_KEY = "planningHebdoV2";
       const PRINT_PLANNING_CLASS = "print-planning";
       const PRINT_FUEL_CLASS = "print-fuel";
+      let currentPanel = "lundi";
       const days = [
         "lundi",
         "mardi",
@@ -1864,6 +1865,7 @@
             buttons.forEach((b) => b.classList.remove("active"));
             btn.classList.add("active");
             const target = btn.dataset.target;
+            currentPanel = target;
             document
               .querySelectorAll(".panel")
               .forEach((panel) =>
@@ -1950,11 +1952,15 @@
       }
 
       function triggerPrint(mode) {
+        applyPrintClass(mode);
+        window.print();
+      }
+
+      function applyPrintClass(mode) {
         document.body.classList.remove(PRINT_PLANNING_CLASS, PRINT_FUEL_CLASS);
         const className =
           mode === "fuel" ? PRINT_FUEL_CLASS : PRINT_PLANNING_CLASS;
         document.body.classList.add(className);
-        window.print();
       }
 
       function init() {
@@ -1963,6 +1969,8 @@
         attachTicketInputs();
         attachNavigation();
         setupNavToggle();
+        const activeBtn = document.querySelector(".tabs button.active");
+        if (activeBtn) currentPanel = activeBtn.dataset.target;
 
         document
           .getElementById("signature-input")
@@ -2002,6 +2010,10 @@
             }
           });
 
+        window.addEventListener("beforeprint", () => {
+          const mode = currentPanel === "carburant" ? "fuel" : "planning";
+          applyPrintClass(mode);
+        });
         window.addEventListener("afterprint", () => {
           document.body.classList.remove(
             PRINT_PLANNING_CLASS,
