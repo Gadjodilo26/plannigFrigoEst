@@ -100,6 +100,8 @@
         overflow-x: auto;
         margin-top: 8px;
         padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
       }
 
       .nav-toggle {
@@ -206,6 +208,7 @@
         border-radius: 12px;
         padding: 12px;
         background: #fff;
+        overflow-x: auto;
       }
 
       .preview-header {
@@ -239,11 +242,16 @@
         max-width: 320px;
       }
 
+      .table-scroll {
+        overflow-x: auto;
+      }
+
       .timesheet {
         width: 100%;
         border-collapse: collapse;
         margin-top: 8px;
         font-size: 0.85rem;
+        min-width: 900px;
       }
 
       .timesheet th,
@@ -459,14 +467,11 @@
 
       @media (max-width: 640px) {
         .nav-toggle {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
+          display: none;
         }
 
         .tabs {
-          display: none;
-          flex-direction: column;
+          display: flex;
           width: 100%;
           background: #fff;
           border: 1px solid #d1d7e0;
@@ -475,13 +480,10 @@
           box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
         }
 
-        .tabs.open {
-          display: flex;
-        }
-
         .tabs button {
-          width: 100%;
-          justify-content: flex-start;
+          flex: 1;
+          justify-content: center;
+          scroll-snap-align: start;
         }
       }
 
@@ -1114,9 +1116,10 @@
               <span>Salarié : <strong id="preview-employee">-</strong></span>
             </div>
 
-            <table class="timesheet">
-              <thead>
-                <tr>
+            <div class="table-scroll">
+              <table class="timesheet">
+                <thead>
+                  <tr>
                   <th>Jour</th>
                   <th>Date</th>
                   <th>Début journée</th>
@@ -1139,8 +1142,9 @@
                   <td id="preview-week-total">0.00 h</td>
                   <td colspan="6"></td>
                 </tr>
-              </tfoot>
-            </table>
+                </tfoot>
+              </table>
+            </div>
 
             <div class="post-table-grid">
               <div class="notes-field">
