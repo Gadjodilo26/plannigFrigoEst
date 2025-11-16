@@ -360,10 +360,11 @@
 
       .fuel-preview-card img {
         width: 100%;
-        height: 110px;
-        object-fit: cover;
+        max-height: 220px;
+        object-fit: contain;
         border: 1px solid #ccc;
         border-radius: 6px;
+        background: #f5f7fb;
       }
 
       .fuel-preview-card p {
@@ -999,6 +1000,24 @@
               <div class="fuel-ticket-form">
                 <h3>Plein #1</h3>
                 <div class="form-field">
+                  <label for="ticket-1-date">Date</label>
+                  <input
+                    type="date"
+                    id="ticket-1-date"
+                    data-ticket-index="0"
+                    data-ticket-field="date"
+                  />
+                </div>
+                <div class="form-field">
+                  <label for="ticket-1-vehicle">N° véhicule</label>
+                  <input
+                    type="text"
+                    id="ticket-1-vehicle"
+                    data-ticket-index="0"
+                    data-ticket-field="vehicle"
+                  />
+                </div>
+                <div class="form-field">
                   <label for="ticket-1-km">Kilométrage</label>
                   <input
                     type="number"
@@ -1056,6 +1075,24 @@
 
               <div class="fuel-ticket-form">
                 <h3>Plein #2</h3>
+                <div class="form-field">
+                  <label for="ticket-2-date">Date</label>
+                  <input
+                    type="date"
+                    id="ticket-2-date"
+                    data-ticket-index="1"
+                    data-ticket-field="date"
+                  />
+                </div>
+                <div class="form-field">
+                  <label for="ticket-2-vehicle">N° véhicule</label>
+                  <input
+                    type="text"
+                    id="ticket-2-vehicle"
+                    data-ticket-index="1"
+                    data-ticket-field="vehicle"
+                  />
+                </div>
                 <div class="form-field">
                   <label for="ticket-2-km">Kilométrage</label>
                   <input
@@ -1115,6 +1152,24 @@
               <div class="fuel-ticket-form">
                 <h3>Plein #3</h3>
                 <div class="form-field">
+                  <label for="ticket-3-date">Date</label>
+                  <input
+                    type="date"
+                    id="ticket-3-date"
+                    data-ticket-index="2"
+                    data-ticket-field="date"
+                  />
+                </div>
+                <div class="form-field">
+                  <label for="ticket-3-vehicle">N° véhicule</label>
+                  <input
+                    type="text"
+                    id="ticket-3-vehicle"
+                    data-ticket-index="2"
+                    data-ticket-field="vehicle"
+                  />
+                </div>
+                <div class="form-field">
                   <label for="ticket-3-km">Kilométrage</label>
                   <input
                     type="number"
@@ -1172,6 +1227,24 @@
 
               <div class="fuel-ticket-form">
                 <h3>Plein #4</h3>
+                <div class="form-field">
+                  <label for="ticket-4-date">Date</label>
+                  <input
+                    type="date"
+                    id="ticket-4-date"
+                    data-ticket-index="3"
+                    data-ticket-field="date"
+                  />
+                </div>
+                <div class="form-field">
+                  <label for="ticket-4-vehicle">N° véhicule</label>
+                  <input
+                    type="text"
+                    id="ticket-4-vehicle"
+                    data-ticket-index="3"
+                    data-ticket-field="vehicle"
+                  />
+                </div>
                 <div class="form-field">
                   <label for="ticket-4-km">Kilométrage</label>
                   <input
@@ -1231,6 +1304,24 @@
               <div class="fuel-ticket-form">
                 <h3>Plein #5</h3>
                 <div class="form-field">
+                  <label for="ticket-5-date">Date</label>
+                  <input
+                    type="date"
+                    id="ticket-5-date"
+                    data-ticket-index="4"
+                    data-ticket-field="date"
+                  />
+                </div>
+                <div class="form-field">
+                  <label for="ticket-5-vehicle">N° véhicule</label>
+                  <input
+                    type="text"
+                    id="ticket-5-vehicle"
+                    data-ticket-index="4"
+                    data-ticket-field="vehicle"
+                  />
+                </div>
+                <div class="form-field">
                   <label for="ticket-5-km">Kilométrage</label>
                   <input
                     type="number"
@@ -1288,6 +1379,24 @@
 
               <div class="fuel-ticket-form">
                 <h3>Plein #6</h3>
+                <div class="form-field">
+                  <label for="ticket-6-date">Date</label>
+                  <input
+                    type="date"
+                    id="ticket-6-date"
+                    data-ticket-index="5"
+                    data-ticket-field="date"
+                  />
+                </div>
+                <div class="form-field">
+                  <label for="ticket-6-vehicle">N° véhicule</label>
+                  <input
+                    type="text"
+                    id="ticket-6-vehicle"
+                    data-ticket-index="5"
+                    data-ticket-field="vehicle"
+                  />
+                </div>
                 <div class="form-field">
                   <label for="ticket-6-km">Kilométrage</label>
                   <input
@@ -1372,6 +1481,8 @@
 
       const TICKET_COUNT = 6;
       const defaultTicket = () => ({
+        date: "",
+        vehicle: "",
         kilometrage: "",
         quantity: "",
         pricePerL: "",
@@ -1573,6 +1684,8 @@
       function populateFuelForms() {
         state.tickets.forEach((ticket, index) => {
           const position = index + 1;
+          setValue(`ticket-${position}-date`, ticket.date);
+          setValue(`ticket-${position}-vehicle`, ticket.vehicle);
           setValue(`ticket-${position}-km`, ticket.kilometrage);
           setValue(`ticket-${position}-quantity`, ticket.quantity);
           setValue(`ticket-${position}-price`, ticket.pricePerL);
@@ -1720,6 +1833,8 @@
             return `
               <div class="fuel-preview-card">
                 <strong>Plein #${index + 1}</strong>
+                <p>Date : ${formatDateFr(ticket.date)}</p>
+                <p>Véhicule : ${ticket.vehicle || "-"}</p>
                 <p>Kilométrage : ${ticket.kilometrage || "-"}</p>
                 <p>Quantité : ${ticket.quantity || "-"} L</p>
                 <p>Prix/L : ${ticket.pricePerL || "-"} €</p>
