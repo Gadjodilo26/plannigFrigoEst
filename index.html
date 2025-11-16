@@ -158,6 +158,13 @@
         margin-top: 8px;
       }
 
+      .day-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
       .actions-row {
         display: flex;
         gap: 12px;
@@ -559,6 +566,10 @@
           <li>
             <strong>Exporter / Importer</strong> : sauvegardez vos données dans un
             fichier ou rechargez une semaine précédente.
+            <em
+              >Important : n'oubliez pas d'exporter vos données avant de fermer la
+              page pour pouvoir les réimporter le jour suivant.</em
+            >
           </li>
           <li>
             <strong>Réinitialiser</strong> : efface tout pour recommencer une
@@ -666,6 +677,14 @@
             <input type="checkbox" id="repos-lundi" />
             <label for="repos-lundi">Journée de repos</label>
           </div>
+          <div class="day-actions">
+            <button type="button" class="btn btn-secondary btn-save">
+              Enregistrer vos données
+            </button>
+            <button type="button" class="btn btn-secondary btn-load">
+              Charger votre planning
+            </button>
+          </div>
         </section>
 
         <section class="panel" data-panel="mardi">
@@ -715,6 +734,14 @@
           <div class="rest-toggle">
             <input type="checkbox" id="repos-mardi" />
             <label for="repos-mardi">Journée de repos</label>
+          </div>
+          <div class="day-actions">
+            <button type="button" class="btn btn-secondary btn-save">
+              Enregistrer vos données
+            </button>
+            <button type="button" class="btn btn-secondary btn-load">
+              Charger votre planning
+            </button>
           </div>
         </section>
 
@@ -766,6 +793,14 @@
             <input type="checkbox" id="repos-mercredi" />
             <label for="repos-mercredi">Journée de repos</label>
           </div>
+          <div class="day-actions">
+            <button type="button" class="btn btn-secondary btn-save">
+              Enregistrer vos données
+            </button>
+            <button type="button" class="btn btn-secondary btn-load">
+              Charger votre planning
+            </button>
+          </div>
         </section>
 
         <section class="panel" data-panel="jeudi">
@@ -815,6 +850,14 @@
           <div class="rest-toggle">
             <input type="checkbox" id="repos-jeudi" />
             <label for="repos-jeudi">Journée de repos</label>
+          </div>
+          <div class="day-actions">
+            <button type="button" class="btn btn-secondary btn-save">
+              Enregistrer vos données
+            </button>
+            <button type="button" class="btn btn-secondary btn-load">
+              Charger votre planning
+            </button>
           </div>
         </section>
 
@@ -866,6 +909,14 @@
             <input type="checkbox" id="repos-vendredi" />
             <label for="repos-vendredi">Journée de repos</label>
           </div>
+          <div class="day-actions">
+            <button type="button" class="btn btn-secondary btn-save">
+              Enregistrer vos données
+            </button>
+            <button type="button" class="btn btn-secondary btn-load">
+              Charger votre planning
+            </button>
+          </div>
         </section>
 
         <section class="panel" data-panel="samedi">
@@ -915,6 +966,14 @@
           <div class="rest-toggle">
             <input type="checkbox" id="repos-samedi" />
             <label for="repos-samedi">Journée de repos</label>
+          </div>
+          <div class="day-actions">
+            <button type="button" class="btn btn-secondary btn-save">
+              Enregistrer vos données
+            </button>
+            <button type="button" class="btn btn-secondary btn-load">
+              Charger votre planning
+            </button>
           </div>
         </section>
 
@@ -966,6 +1025,14 @@
             <input type="checkbox" id="repos-dimanche" />
             <label for="repos-dimanche">Journée de repos</label>
           </div>
+          <div class="day-actions">
+            <button type="button" class="btn btn-secondary btn-save">
+              Enregistrer vos données
+            </button>
+            <button type="button" class="btn btn-secondary btn-load">
+              Charger votre planning
+            </button>
+          </div>
         </section>
 
         <section class="panel preview-panel" data-panel="preview">
@@ -978,9 +1045,11 @@
               <input type="file" id="signature-input" accept="image/png" />
             </div>
             <div class="form-field">
-              <label class="sr-only" for="import-input">Importer données</label>
-              <button class="btn btn-secondary" id="import-button" type="button">
-                Importer un fichier .json
+              <label class="sr-only" for="import-input"
+                >Charger votre planning</label
+              >
+              <button class="btn btn-secondary btn-load" id="import-button" type="button">
+                Charger votre planning
               </button>
               <input
                 type="file"
@@ -990,9 +1059,11 @@
               />
             </div>
             <div class="form-field">
-              <label class="sr-only" for="export-data">Exporter</label>
-              <button class="btn btn-secondary" id="export-data" type="button">
-                Exporter les données
+              <label class="sr-only" for="export-data"
+                >Enregistrer vos données</label
+              >
+              <button class="btn btn-secondary btn-save" id="export-data" type="button">
+                Enregistrer vos données
               </button>
             </div>
             <div class="form-field">
@@ -2052,6 +2123,20 @@
           : "Afficher l'aperçu des tickets";
       }
 
+      function setupSaveLoadButtons() {
+        const importInput = document.getElementById("import-input");
+        document.querySelectorAll(".btn-save").forEach((btn) => {
+          btn.addEventListener("click", () => exportData());
+        });
+        document.querySelectorAll(".btn-load").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            if (importInput) {
+              importInput.click();
+            }
+          });
+        });
+      }
+
       function attachNavigation() {
         const buttons = document.querySelectorAll(".tabs button");
         const tabsContainer = document.querySelector(".tabs");
@@ -2165,6 +2250,7 @@
         attachNavigation();
         setupNavToggle();
         setupFuelPreviewToggle();
+        setupSaveLoadButtons();
         const activeBtn = document.querySelector(".tabs button.active");
         if (activeBtn) currentPanel = activeBtn.dataset.target;
 
