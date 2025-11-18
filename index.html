@@ -721,17 +721,39 @@
       }
 
       @media print and (max-width: 640px) {
+        @page {
+          size: A4 landscape;
+          margin: 2mm;
+        }
+
+        body {
+          font-size: 0.95rem;
+        }
+
+        .preview-wrapper {
+          padding: 0;
+        }
+
         .timesheet {
-          font-size: 0.85rem;
+          font-size: 0.9rem;
+          margin-top: 8px;
         }
 
         .timesheet th,
         .timesheet td {
-          padding: 5px 3px;
+          padding: 6px 4px;
         }
 
         .timesheet td {
-          font-size: 0.85rem;
+          font-size: 0.9rem;
+        }
+
+        .post-table-grid {
+          margin-top: 8px;
+        }
+
+        .notes-field p {
+          min-height: 50px;
         }
       }
     </style>
