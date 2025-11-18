@@ -160,6 +160,20 @@
         margin-top: 8px;
       }
 
+      .rest-toggle label {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .rest-toggle .absence-select {
+        border-radius: 6px;
+        border: 1px solid #d1d7e0;
+        padding: 6px 10px;
+        font-size: 0.95rem;
+        font-family: inherit;
+        flex: 1;
+      }
+
       .day-actions {
         display: flex;
         flex-wrap: wrap;
@@ -244,6 +258,7 @@
 
       .table-scroll {
         overflow-x: auto;
+        padding-bottom: 8px;
       }
 
       .timesheet {
@@ -252,6 +267,7 @@
         margin-top: 8px;
         font-size: 0.85rem;
         min-width: 900px;
+        table-layout: auto;
       }
 
       .timesheet th,
@@ -287,6 +303,7 @@
         border-radius: 6px;
         padding: 4px;
         background: #fff;
+        page-break-inside: avoid;
       }
 
       .notes-field textarea,
@@ -304,9 +321,38 @@
       }
 
       .signature-box img {
-        max-height: 45px;
         width: 100%;
+        height: 80px;
         object-fit: contain;
+      }
+
+      .signature-cell {
+        min-width: 90px;
+        text-align: center;
+      }
+
+      .signature-stamp {
+        width: 100%;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .signature-stamp img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      .signature-placeholder {
+        font-size: 0.85rem;
+        color: #555;
+      }
+
+      .cp-flag {
+        color: #be123c;
+        font-weight: 600;
       }
 
       .stack-cell {
@@ -329,17 +375,18 @@
 
       .fuel-forms {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
       }
 
       .fuel-ticket-form {
         border: 1px solid #cfd8e3;
-        border-radius: 10px;
-        padding: 10px;
+        border-radius: 8px;
+        padding: 8px;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
+        font-size: 0.95rem;
       }
 
       .fuel-ticket-form h3 {
@@ -369,10 +416,10 @@
         border: 1px solid #222;
         border-radius: 8px;
         padding: 8px;
-        min-height: 180px;
+        min-height: 170px;
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 4px;
       }
 
       .fuel-preview-card strong {
@@ -381,7 +428,7 @@
 
       .fuel-preview-card img {
         width: 100%;
-        max-height: 220px;
+        max-height: 200px;
         object-fit: contain;
         border: 1px solid #ccc;
         border-radius: 6px;
@@ -503,16 +550,18 @@
       /* Format d'impression A4 paysage */
       @page {
         size: A4 landscape;
-        margin: 6mm;
+        margin: 3mm;
       }
 
       @media print {
         body {
           background: #fff;
+          font-size: 0.85rem;
         }
 
         header p,
         header img,
+        header h1,
         footer,
         .preview-panel .day-title,
         .meta-card,
@@ -547,6 +596,105 @@
         .preview-wrapper {
           border: none;
           padding: 0;
+          max-width: 100%;
+          margin: 0;
+          overflow: visible;
+        }
+
+        .preview-header {
+          gap: 6px;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .preview-header img {
+          max-height: 40px;
+          margin-right: auto;
+        }
+
+        .preview-meta {
+          font-size: 0.75rem;
+          gap: 4px;
+          text-align: right;
+          margin-left: auto;
+        }
+
+        .employee-banner {
+          margin: 4px auto;
+          padding: 2px 6px;
+          font-size: 0.8rem;
+        }
+
+        .table-scroll {
+          overflow: visible !important;
+          padding-bottom: 0;
+          scrollbar-width: none !important;
+        }
+
+        .table-scroll::-webkit-scrollbar {
+          display: none !important;
+        }
+
+        .timesheet {
+          min-width: auto;
+          width: 100%;
+          table-layout: fixed;
+          font-size: 0.75rem;
+          margin-top: 4px;
+        }
+
+        .timesheet th,
+        .timesheet td {
+          padding: 4px 2px;
+        }
+
+        .timesheet td {
+          font-size: 0.75rem;
+          word-break: break-word;
+        }
+
+        .fuel-panel .fuel-forms {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 6px;
+        }
+
+        .fuel-panel .fuel-ticket-form {
+          padding: 6px;
+          font-size: 0.8rem;
+          gap: 4px;
+        }
+
+        .fuel-panel .fuel-ticket-form input,
+        .fuel-panel .fuel-ticket-form label {
+          font-size: 0.75rem;
+        }
+
+        .fuel-panel .fuel-ticket-form h3 {
+          font-size: 0.85rem;
+        }
+
+        .fuel-preview-card img {
+          max-height: 160px;
+        }
+
+        .signature-stamp {
+          height: 45px;
+        }
+
+        .signature-box img {
+          height: 55px;
+        }
+
+        .post-table-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 4px;
+          margin-top: 4px;
+        }
+
+        .notes-field p {
+          min-height: 40px;
+          font-size: 0.75rem;
         }
       }
     </style>
@@ -720,8 +868,16 @@
             </div>
           </div>
           <div class="rest-toggle">
-            <input type="checkbox" id="repos-lundi" />
-            <label for="repos-lundi">Journée de repos</label>
+            <label for="absence-lundi">Statut de la journée</label>
+            <select
+              id="absence-lundi"
+              class="absence-select"
+              data-absence-day="lundi"
+            >
+              <option value="">Journée travaillée</option>
+              <option value="repos">Repos</option>
+              <option value="cp">CP</option>
+            </select>
           </div>
           <div class="day-actions">
             <button type="button" class="btn btn-secondary btn-save">
@@ -778,8 +934,16 @@
             </div>
           </div>
           <div class="rest-toggle">
-            <input type="checkbox" id="repos-mardi" />
-            <label for="repos-mardi">Journée de repos</label>
+            <label for="absence-mardi">Statut de la journée</label>
+            <select
+              id="absence-mardi"
+              class="absence-select"
+              data-absence-day="mardi"
+            >
+              <option value="">Journée travaillée</option>
+              <option value="repos">Repos</option>
+              <option value="cp">CP</option>
+            </select>
           </div>
           <div class="day-actions">
             <button type="button" class="btn btn-secondary btn-save">
@@ -836,8 +1000,16 @@
             </div>
           </div>
           <div class="rest-toggle">
-            <input type="checkbox" id="repos-mercredi" />
-            <label for="repos-mercredi">Journée de repos</label>
+            <label for="absence-mercredi">Statut de la journée</label>
+            <select
+              id="absence-mercredi"
+              class="absence-select"
+              data-absence-day="mercredi"
+            >
+              <option value="">Journée travaillée</option>
+              <option value="repos">Repos</option>
+              <option value="cp">CP</option>
+            </select>
           </div>
           <div class="day-actions">
             <button type="button" class="btn btn-secondary btn-save">
@@ -894,8 +1066,16 @@
             </div>
           </div>
           <div class="rest-toggle">
-            <input type="checkbox" id="repos-jeudi" />
-            <label for="repos-jeudi">Journée de repos</label>
+            <label for="absence-jeudi">Statut de la journée</label>
+            <select
+              id="absence-jeudi"
+              class="absence-select"
+              data-absence-day="jeudi"
+            >
+              <option value="">Journée travaillée</option>
+              <option value="repos">Repos</option>
+              <option value="cp">CP</option>
+            </select>
           </div>
           <div class="day-actions">
             <button type="button" class="btn btn-secondary btn-save">
@@ -952,8 +1132,16 @@
             </div>
           </div>
           <div class="rest-toggle">
-            <input type="checkbox" id="repos-vendredi" />
-            <label for="repos-vendredi">Journée de repos</label>
+            <label for="absence-vendredi">Statut de la journée</label>
+            <select
+              id="absence-vendredi"
+              class="absence-select"
+              data-absence-day="vendredi"
+            >
+              <option value="">Journée travaillée</option>
+              <option value="repos">Repos</option>
+              <option value="cp">CP</option>
+            </select>
           </div>
           <div class="day-actions">
             <button type="button" class="btn btn-secondary btn-save">
@@ -1010,8 +1198,16 @@
             </div>
           </div>
           <div class="rest-toggle">
-            <input type="checkbox" id="repos-samedi" />
-            <label for="repos-samedi">Journée de repos</label>
+            <label for="absence-samedi">Statut de la journée</label>
+            <select
+              id="absence-samedi"
+              class="absence-select"
+              data-absence-day="samedi"
+            >
+              <option value="">Journée travaillée</option>
+              <option value="repos">Repos</option>
+              <option value="cp">CP</option>
+            </select>
           </div>
           <div class="day-actions">
             <button type="button" class="btn btn-secondary btn-save">
@@ -1068,8 +1264,16 @@
             </div>
           </div>
           <div class="rest-toggle">
-            <input type="checkbox" id="repos-dimanche" />
-            <label for="repos-dimanche">Journée de repos</label>
+            <label for="absence-dimanche">Statut de la journée</label>
+            <select
+              id="absence-dimanche"
+              class="absence-select"
+              data-absence-day="dimanche"
+            >
+              <option value="">Journée travaillée</option>
+              <option value="repos">Repos</option>
+              <option value="cp">CP</option>
+            </select>
           </div>
           <div class="day-actions">
             <button type="button" class="btn btn-secondary btn-save">
@@ -1152,7 +1356,6 @@
                   <th>Véhicule</th>
                   <th>Tournée</th>
                   <th>Client</th>
-                  <th>Repos</th>
                   <th>Signature salarié</th>
                   <th>Signature employeur</th>
                 </tr>
@@ -1162,7 +1365,7 @@
                 <tr class="weekly-total-row">
                   <th colspan="6">Total hebdomadaire</th>
                   <td id="preview-week-total">0.00 h</td>
-                  <td colspan="6"></td>
+                  <td colspan="5"></td>
                 </tr>
                 </tfoot>
               </table>
@@ -1628,6 +1831,8 @@
       const TICKET_COUNT = 5;
       const MAX_TICKET_IMAGE_DIMENSION = 1600;
       const MAX_TICKET_IMAGE_BYTES = 700 * 1024; // ~700 KB
+      const MAX_SIGNATURE_IMAGE_DIMENSION = 1000;
+      const MAX_SIGNATURE_IMAGE_BYTES = 450 * 1024; // ~450 KB
       const defaultTicket = () => ({
         date: "",
         vehicle: "",
@@ -1650,6 +1855,7 @@
         tournee: "",
         client: "",
         repos: false,
+        absence: "",
       });
 
       const defaultState = () => ({
@@ -1686,8 +1892,12 @@
       }
 
       // Calcul du total de la journée hors pause
+      function isDayAbsent(dayData) {
+        return dayData?.absence === "repos" || dayData?.absence === "cp";
+      }
+
       function computeDayTotal(dayData) {
-        if (dayData.repos) return 0;
+        if (isDayAbsent(dayData)) return 0;
         if (!dayData.startDay || !dayData.returnTime) return null;
 
         const startMinutes = toMinutes(dayData.startDay);
@@ -1731,7 +1941,12 @@
           const base = defaultState();
           const parsedDays = parsed.days || {};
           const mergedDays = days.reduce((acc, day) => {
-            acc[day] = { ...defaultDay(), ...(parsedDays[day] || {}) };
+            const merged = { ...defaultDay(), ...(parsedDays[day] || {}) };
+            if (!merged.absence && merged.repos) {
+              merged.absence = "repos";
+            }
+            merged.repos = merged.absence === "repos";
+            acc[day] = merged;
             return acc;
           }, {});
           const parsedTickets = Array.isArray(parsed.tickets)
@@ -1803,9 +2018,8 @@
           setValue(`vehicule-${day}`, data.vehicule);
           setValue(`tournee-${day}`, data.tournee);
           setValue(`client-${day}`, data.client);
-          const checkbox = document.getElementById(`repos-${day}`);
-          checkbox.checked = data.repos;
-          toggleDayFields(day, data.repos, { clearState: false });
+          setValue(`absence-${day}`, data.absence || "");
+          toggleDayFields(day, isDayAbsent(data), { clearState: false });
         });
 
         populateFuelForms();
@@ -1892,7 +2106,7 @@
         summary.textContent = `Semaine actuelle : n° ${info.week}, du ${info.start} au ${info.end} — ${info.datetime}`;
       }
 
-      // Active/désactive les champs d'un jour selon le statut repos
+      // Active/désactive les champs d'un jour selon le statut d'absence
       const timeFieldMap = [
         { id: "debut-journee", key: "startDay" },
         { id: "pause1-debut", key: "pause1Start" },
@@ -1951,12 +2165,7 @@
             weeklyTotal += minutes;
           }
           const tr = document.createElement("tr");
-          const totalCell =
-            data.repos || minutes === null
-              ? data.repos
-                ? "Repos"
-                : "-"
-              : minutesFormate(minutes);
+          const totalCell = buildTotalCell(data, minutes);
           tr.innerHTML = `
             <td>${capitalize(day)}</td>
             <td>${formatDateFr(data.date)}</td>
@@ -1968,9 +2177,8 @@
             <td>${data.vehicule || "-"}</td>
             <td>${data.tournee || "-"}</td>
             <td>${data.client || "-"}</td>
-            <td>${data.repos ? "Oui" : "Non"}</td>
-            <td></td>
-            <td></td>
+            <td class="signature-cell">${buildSignatureStamp()}</td>
+            <td class="signature-cell"></td>
           `;
           tbody.appendChild(tr);
         });
@@ -2050,6 +2258,30 @@
         `;
       }
 
+      function buildTotalCell(dayData, minutes) {
+        if (dayData.absence === "cp") {
+          return `<span class="cp-flag">CP</span>`;
+        }
+        if (dayData.absence === "repos") {
+          return "Repos";
+        }
+        if (minutes === null) {
+          return "-";
+        }
+        return minutesFormate(minutes);
+      }
+
+      function buildSignatureStamp() {
+        if (!state.signature) {
+          return `<span class="signature-placeholder">-</span>`;
+        }
+        return `
+          <div class="signature-stamp">
+            <img src="${state.signature}" alt="Signature salarié" />
+          </div>
+        `;
+      }
+
       function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
       }
@@ -2065,7 +2297,6 @@
         vehicule: "vehicule",
         tournee: "tournee",
         client: "client",
-        repos: "repos",
       };
 
       function handleDayInput(event) {
@@ -2076,10 +2307,7 @@
         const mappedKey = fieldMap[field];
         if (!mappedKey || !state.days[day]) return;
 
-        if (mappedKey === "repos" && type === "checkbox") {
-          state.days[day].repos = checked;
-          toggleDayFields(day, checked);
-        } else if (mappedKey === "date") {
+        if (mappedKey === "date") {
           state.days[day].date = value;
         } else {
           state.days[day][mappedKey] = value;
@@ -2095,6 +2323,16 @@
         if (id === "employee-name") state.meta.employee = value;
         if (id === "observations") state.meta.observations = value;
         updateWeekSummary();
+        saveState();
+      }
+
+      function handleAbsenceChange(event) {
+        const day = event.target.dataset.absenceDay;
+        if (!day || !state.days[day]) return;
+        const value = event.target.value;
+        state.days[day].absence = value;
+        state.days[day].repos = value === "repos";
+        toggleDayFields(day, Boolean(value));
         saveState();
       }
 
@@ -2176,35 +2414,72 @@
         }
       }
 
+      async function prepareSignatureImage(file) {
+        const initialDataUrl = await readFileAsDataURL(file);
+        return optimizeSignatureImageDataUrl(initialDataUrl);
+      }
+
+      async function optimizeSignatureImageDataUrl(dataUrl) {
+        if (!dataUrl || typeof dataUrl !== "string") return "";
+        if (!dataUrl.startsWith("data:image")) return dataUrl;
+        try {
+          const imageElement = await loadImage(dataUrl);
+          return compressSignatureImageElement(imageElement);
+        } catch (error) {
+          console.warn("Impossible de retraiter la signature.", error);
+          return "";
+        }
+      }
+
       function compressTicketImageElement(imageElement) {
+        return compressImageElement(imageElement, {
+          maxDimension: MAX_TICKET_IMAGE_DIMENSION,
+          maxBytes: MAX_TICKET_IMAGE_BYTES,
+          mimeType: "image/jpeg",
+          backgroundColor: "#ffffff",
+        });
+      }
+
+      function compressSignatureImageElement(imageElement) {
+        return compressImageElement(imageElement, {
+          maxDimension: MAX_SIGNATURE_IMAGE_DIMENSION,
+          maxBytes: MAX_SIGNATURE_IMAGE_BYTES,
+          mimeType: "image/png",
+        });
+      }
+
+      function compressImageElement(imageElement, options) {
+        if (!imageElement || !options) return "";
+        const { maxDimension, maxBytes, mimeType = "image/jpeg", backgroundColor } =
+          options;
         let { width, height } = imageElement;
         if (!width || !height) return "";
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         if (!ctx) return "";
-        const maxSize = MAX_TICKET_IMAGE_DIMENSION;
-        if (width > maxSize || height > maxSize) {
-          const scale = Math.min(maxSize / width, maxSize / height);
+        const limit = maxDimension || 1600;
+        if (width > limit || height > limit) {
+          const scale = Math.min(limit / width, limit / height);
           width = Math.round(width * scale);
           height = Math.round(height * scale);
         }
         canvas.width = width;
         canvas.height = height;
+        if (backgroundColor) {
+          ctx.fillStyle = backgroundColor;
+          ctx.fillRect(0, 0, width, height);
+        }
         ctx.drawImage(imageElement, 0, 0, width, height);
-        const mimeType = "image/jpeg";
-        let quality = 0.85;
+        const isPng = mimeType === "image/png";
+        let quality = isPng ? undefined : 0.85;
         let dataUrl = canvas.toDataURL(mimeType, quality);
-        while (
-          estimateDataUrlBytes(dataUrl) > MAX_TICKET_IMAGE_BYTES &&
-          quality > 0.5
-        ) {
+        const bytesLimit = maxBytes || MAX_TICKET_IMAGE_BYTES;
+        while (!isPng && estimateDataUrlBytes(dataUrl) > bytesLimit && quality > 0.5) {
           quality -= 0.1;
           dataUrl = canvas.toDataURL(mimeType, quality);
         }
-        if (estimateDataUrlBytes(dataUrl) > MAX_TICKET_IMAGE_BYTES) {
-          console.warn(
-            "La photo du ticket reste trop volumineuse après compression."
-          );
+        if (estimateDataUrlBytes(dataUrl) > bytesLimit) {
+          console.warn("Impossible de compresser suffisamment l'image.");
           return "";
         }
         return dataUrl;
@@ -2217,16 +2492,18 @@
           )
           .forEach((input) => input.addEventListener("input", handleDayInput));
         document
-          .querySelectorAll('input[id^="repos-"]')
-          .forEach((checkbox) =>
-            checkbox.addEventListener("change", handleDayInput)
-          );
-
-        document
           .querySelectorAll(
             "#week-number, #week-start, #week-end, #employee-name, #observations"
           )
           .forEach((input) => input.addEventListener("input", handleMetaInput));
+      }
+
+      function attachAbsenceInputs() {
+        document
+          .querySelectorAll("[data-absence-day]")
+          .forEach((select) =>
+            select.addEventListener("change", handleAbsenceChange)
+          );
       }
 
       function attachTicketInputs() {
@@ -2335,15 +2612,27 @@
         }
       }
 
-      function handleFileInput(input, key) {
+      async function handleFileInput(input, key) {
         const file = input.files[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          state[key] = reader.result;
+        try {
+          if (key === "signature") {
+            const optimizedSignature = await prepareSignatureImage(file);
+            if (!optimizedSignature) {
+              alert(
+                "La signature est trop volumineuse. Réessayez avec une image plus légère (PNG recommandé)."
+              );
+              return;
+            }
+            state[key] = optimizedSignature;
+          } else {
+            state[key] = await readFileAsDataURL(file);
+          }
           saveState();
-        };
-        reader.readAsDataURL(file);
+        } catch (error) {
+          console.error("Impossible de charger ce fichier.", error);
+          alert("La signature n'a pas pu être importée.");
+        }
       }
 
       function exportData() {
@@ -2366,7 +2655,12 @@
             const base = defaultState();
             const importedDays = imported.days || {};
             const mergedDays = days.reduce((acc, day) => {
-              acc[day] = { ...defaultDay(), ...(importedDays[day] || {}) };
+              const merged = { ...defaultDay(), ...(importedDays[day] || {}) };
+              if (!merged.absence && merged.repos) {
+                merged.absence = "repos";
+              }
+              merged.repos = merged.absence === "repos";
+              acc[day] = merged;
               return acc;
             }, {});
             const importedTickets = Array.isArray(imported.tickets)
@@ -2398,13 +2692,16 @@
                   : null
               )
               .filter(Boolean);
+            const optimizedSignature = imported.signature
+              ? await optimizeSignatureImageDataUrl(imported.signature)
+              : "";
             state = {
               ...base,
               ...imported,
               meta: { ...base.meta, ...(imported.meta || {}) },
               days: mergedDays,
               tickets: optimizedTickets,
-              signature: imported.signature || "",
+              signature: optimizedSignature,
             };
             saveState();
             populateForms();
@@ -2441,6 +2738,7 @@
       function init() {
         populateForms();
         attachInputs();
+        attachAbsenceInputs();
         attachTicketInputs();
         attachNavigation();
         setupNavToggle();
