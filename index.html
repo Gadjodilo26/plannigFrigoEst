@@ -1626,6 +1626,8 @@
       ];
 
       const TICKET_COUNT = 5;
+      const MAX_TICKET_IMAGE_DIMENSION = 1600;
+      const MAX_TICKET_IMAGE_BYTES = 700 * 1024; // ~700 KB
       const defaultTicket = () => ({
         date: "",
         vehicle: "",
@@ -1667,6 +1669,7 @@
       });
 
       let state = loadState();
+      let storageErrorNotified = false;
 
       // Convertit HH:MM vers minutes
       function toMinutes(value) {
@@ -1758,9 +1761,21 @@
       }
 
       function saveState() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        renderPreview();
-        renderFuelCards();
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          storageErrorNotified = false;
+        } catch (error) {
+          console.warn("Impossible d'enregistrer les données localement.", error);
+          if (!storageErrorNotified) {
+            alert(
+              "Le stockage local a échoué (données trop volumineuses). L'aperçu reste visible tant que la page reste ouverte mais importez des photos plus légères ou supprimez-en quelques-unes."
+            );
+            storageErrorNotified = true;
+          }
+        } finally {
+          renderPreview();
+          renderFuelCards();
+        }
       }
 
       function resetState() {
@@ -2092,7 +2107,7 @@
         saveState();
       }
 
-      function handleTicketImage(event) {
+      async function handleTicketImage(event) {
         const { ticketIndex } = event.target.dataset;
         if (ticketIndex === undefined) return;
         const index = Number(ticketIndex);
@@ -2103,12 +2118,96 @@
           saveState();
           return;
         }
-        const reader = new FileReader();
-        reader.onload = () => {
-          state.tickets[index].image = reader.result;
+        try {
+          const processedImage = await prepareTicketImage(file);
+          if (!processedImage) {
+            alert(
+              "La photo est trop volumineuse. Choisissez un fichier plus léger."
+            );
+            return;
+          }
+          state.tickets[index].image = processedImage;
           saveState();
-        };
-        reader.readAsDataURL(file);
+        } catch (error) {
+          console.error("Impossible de traiter la photo du ticket.", error);
+          alert(
+            "La photo du ticket n'a pas pu être chargée. Essayez avec une image plus petite."
+          );
+        }
+      }
+
+      function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function loadImage(dataUrl) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = dataUrl;
+        });
+      }
+
+      function estimateDataUrlBytes(dataUrl) {
+        const base64 = dataUrl.split(",")[1] || "";
+        return Math.ceil((base64.length * 3) / 4);
+      }
+
+      async function prepareTicketImage(file) {
+        const initialDataUrl = await readFileAsDataURL(file);
+        return optimizeTicketImageDataUrl(initialDataUrl);
+      }
+
+      async function optimizeTicketImageDataUrl(dataUrl) {
+        if (!dataUrl || typeof dataUrl !== "string") return "";
+        if (!dataUrl.startsWith("data:image")) return dataUrl;
+        try {
+          const imageElement = await loadImage(dataUrl);
+          return compressTicketImageElement(imageElement);
+        } catch (error) {
+          console.warn("Impossible de retraiter la photo du ticket.", error);
+          return "";
+        }
+      }
+
+      function compressTicketImageElement(imageElement) {
+        let { width, height } = imageElement;
+        if (!width || !height) return "";
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return "";
+        const maxSize = MAX_TICKET_IMAGE_DIMENSION;
+        if (width > maxSize || height > maxSize) {
+          const scale = Math.min(maxSize / width, maxSize / height);
+          width = Math.round(width * scale);
+          height = Math.round(height * scale);
+        }
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(imageElement, 0, 0, width, height);
+        const mimeType = "image/jpeg";
+        let quality = 0.85;
+        let dataUrl = canvas.toDataURL(mimeType, quality);
+        while (
+          estimateDataUrlBytes(dataUrl) > MAX_TICKET_IMAGE_BYTES &&
+          quality > 0.5
+        ) {
+          quality -= 0.1;
+          dataUrl = canvas.toDataURL(mimeType, quality);
+        }
+        if (estimateDataUrlBytes(dataUrl) > MAX_TICKET_IMAGE_BYTES) {
+          console.warn(
+            "La photo du ticket reste trop volumineuse après compression."
+          );
+          return "";
+        }
+        return dataUrl;
       }
 
       function attachInputs() {
@@ -2261,7 +2360,7 @@
 
       function importData(file) {
         const reader = new FileReader();
-        reader.onload = () => {
+        reader.onload = async () => {
           try {
             const imported = JSON.parse(reader.result);
             const base = defaultState();
@@ -2280,19 +2379,49 @@
                 ...(importedTickets[index] || {}),
               })
             );
+            const optimizedTickets = await Promise.all(
+              mergedTickets.map(async (ticket) => {
+                if (!ticket.image) return { ...ticket };
+                const optimizedImage = await optimizeTicketImageDataUrl(
+                  ticket.image
+                );
+                return {
+                  ...ticket,
+                  image: optimizedImage,
+                };
+              })
+            );
+            const droppedTickets = optimizedTickets
+              .map((ticket, index) =>
+                mergedTickets[index].image && !ticket.image
+                  ? `#${index + 1}`
+                  : null
+              )
+              .filter(Boolean);
             state = {
               ...base,
               ...imported,
               meta: { ...base.meta, ...(imported.meta || {}) },
               days: mergedDays,
-              tickets: mergedTickets,
+              tickets: optimizedTickets,
               signature: imported.signature || "",
             };
             saveState();
             populateForms();
+            if (droppedTickets.length) {
+              alert(
+                `Certaines photos de tickets étaient trop volumineuses et n'ont pas pu être importées (${droppedTickets.join(
+                  ", "
+                )}).`
+              );
+            }
           } catch (error) {
-            alert("Fichier non valide.");
+            console.error("Échec de l'import du fichier JSON :", error);
+            alert("Ce fichier n'est pas valide ou dépasse la limite autorisée.");
           }
+        };
+        reader.onerror = () => {
+          alert("Impossible de lire ce fichier.");
         };
         reader.readAsText(file);
       }
