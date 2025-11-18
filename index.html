@@ -2461,12 +2461,6 @@
           .getElementById("print-fuel")
           .addEventListener("click", () => triggerPrint("fuel"));
         document
-          .getElementById("export-data")
-          .addEventListener("click", exportData);
-        document.getElementById("import-button").addEventListener("click", () => {
-          document.getElementById("import-input").click();
-        });
-        document
           .getElementById("import-input")
           .addEventListener("change", (event) => {
             const file = event.target.files[0];
